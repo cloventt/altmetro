@@ -14,7 +14,7 @@ export class MetroinfoApiService {
   constructor(private http: HttpClient) { }
 
   getPlatformData(platformNumber: number): Observable<PlatformData> {
-    return this.http.get<{features: {attributes: {PlatformTag: number, PlatformNo: number, PlatformName: string}}[]}>(
+    return this.http.get<{ features: { attributes: { PlatformTag: number, PlatformNo: number, PlatformName: string } }[] }>(
       `https://vpn.cloventt.net/metroinfoproxy/api/gis`, {
       params: {
         platformNo: `${platformNumber}`
@@ -56,19 +56,21 @@ export class MetroinfoApiService {
     parsed.stopTag = data.JPRoutePositionET.Platform.PlatformTag;
     parsed.stopName = data.JPRoutePositionET.Platform.Name;
     const buses = [];
-    data.JPRoutePositionET.Platform.Route.forEach((route) => {
-      const routeNumber = route.RouteNo;
-      const routeName = route.Name;
-      const destination = Array.isArray(route.Destination) ? route.Destination : [route.Destination];
+    const route = Array.isArray(data.JPRoutePositionET.Platform.Route) ?
+      data.JPRoutePositionET.Platform.Route : [data.JPRoutePositionET.Platform.Route];
+    route.forEach((r) => {
+      const routeNumber = r.RouteNo;
+      const routeName = r.Name;
+      const destination = Array.isArray(r.Destination) ? r.Destination : [r.Destination];
       destination.forEach((dest) => {
         const trip = Array.isArray(dest.Trip) ? dest.Trip : [dest.Trip];
         trip.forEach((t) => {
-          const r = new RouteEta();
-          r.routeName = routeName;
-          r.routeNumber = routeNumber;
-          r.etaMinutes = t.ETA;
-          r.tripNumber = t.TripNo;
-          buses.push(r);
+          const routeData = new RouteEta();
+          routeData.routeName = routeName;
+          routeData.routeNumber = routeNumber;
+          routeData.etaMinutes = t.ETA;
+          routeData.tripNumber = t.TripNo;
+          buses.push(routeData);
         });
       });
     });
