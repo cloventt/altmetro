@@ -13,7 +13,25 @@ export class MetroinfoApiService {
 
   constructor(private http: HttpClient) { }
 
-  getNextBus(stopNo: number): Observable<PlatformData> {
+  getPlatformData(platformNumber: number): Observable<PlatformData> {
+    return this.http.get<{features: {attributes: {PlatformTag: number, PlatformNo: number, PlatformName: string}}[]}>(
+      `https://vpn.cloventt.net/metroinfoproxy/api/gis`, {
+      params: {
+        platformNo: `${platformNumber}`
+      },
+    }).pipe(map((res) => {
+      if (res.features.length < 1) {
+        return null;
+      }
+      const platformData = new PlatformData();
+      platformData.stopName = res.features[0].attributes.PlatformName;
+      platformData.stopNumber = res.features[0].attributes.PlatformNo;
+      platformData.stopTag = res.features[0].attributes.PlatformTag;
+      return platformData;
+    }));
+  }
+
+  getNextBus(stopNo: number): Observable<RouteEta[]> {
     return this.http.get(`https://vpn.cloventt.net/metroinfoproxy/api/nextbus`, {
       params: {
         PlatformTag: `${stopNo}`
@@ -23,7 +41,8 @@ export class MetroinfoApiService {
     }).pipe(map(res => this.parseXml(res)));
   }
 
-  private parseXml(xml: string): PlatformData {
+
+  private parseXml(xml: string): RouteEta[] {
     const data = parser.parse(xml, {
       attributeNamePrefix: '',
       ignoreNameSpace: false,
@@ -31,9 +50,12 @@ export class MetroinfoApiService {
     });
 
     const parsed = new PlatformData();
-    parsed.stopNo = data.JPRoutePositionET.Platform.PlatformTag;
+    if (data.JPRoutePositionET.Platform === undefined) {
+      return [];
+    }
+    parsed.stopTag = data.JPRoutePositionET.Platform.PlatformTag;
     parsed.stopName = data.JPRoutePositionET.Platform.Name;
-    parsed.buses = [];
+    const buses = [];
     data.JPRoutePositionET.Platform.Route.forEach((route) => {
       const routeNumber = route.RouteNo;
       const routeName = route.Name;
@@ -46,18 +68,19 @@ export class MetroinfoApiService {
           r.routeNumber = routeNumber;
           r.etaMinutes = t.ETA;
           r.tripNumber = t.TripNo;
-          parsed.buses.push(r);
+          buses.push(r);
         });
       });
     });
-    parsed.buses = parsed.buses.sort((a, b) => a.etaMinutes - b.etaMinutes);
-    return parsed;
+    buses.sort((a, b) => a.etaMinutes - b.etaMinutes);
+    return buses;
   }
 }
 
 export class PlatformData {
   stopName: string;
-  stopNo: number;
+  stopNumber?: number;
+  stopTag: number;
   buses: RouteEta[];
 }
 

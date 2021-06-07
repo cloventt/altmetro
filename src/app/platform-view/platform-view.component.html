@@ -1,0 +1,11 @@
+<content>
+    <div class="container">
+        <h1 class="title">My Stops</h1>
+        <div class="tile is-ancestor">
+            <div class="tile is-parent" style="flex-wrap: wrap;">
+                <app-next-bus class="tile is-narrow" *ngFor="let platform of savedStops;" [platformData]=platform></app-next-bus>
+                <app-add-bus-tile class="tile is-narrow"></app-add-bus-tile>
+            </div>
+        </div>
+    </div>
+</content>

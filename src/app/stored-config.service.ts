@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { PlatformData } from './metroinfo-api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,9 +24,11 @@ export class StoredConfigService {
   public get(): Config {
     if (this.innerConfig === undefined) {
       const storedConfig = localStorage.getItem('appConfig');
-      if (storedConfig === undefined) {
+      if (storedConfig === null) {
         console.log('Initialising new config...');
         this.innerConfig = new Config();
+        this.innerConfig.savedStops = [];
+        this.update(this.innerConfig);
       } else {
         this.innerConfig = JSON.parse(localStorage.getItem('appConfig'));
       }
@@ -39,9 +42,5 @@ export class StoredConfigService {
 }
 
 export class Config {
-  savedStops: {
-    stopNumber: number,
-    stopName: string,
-    routeFilters: number[],
-  }[];
+  savedStops: PlatformData[];
 }

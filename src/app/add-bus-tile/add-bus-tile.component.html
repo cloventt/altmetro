@@ -1,5 +1,16 @@
 <div class="tile is-parent">
     <article class="tile is-child notification">
-    <p>Add stop...</p>
+        <form (ngSubmit)="onSubmit()" [formGroup]="addStopForm" onsubmit="return false">
+            <label class="label" for="">Add a Stop</label>
+            <div class="field has-addons">
+                <div class="control">
+                    <input id="stopNumber" formControlName="stopNumber" class="input {{ formStyle }}" type="number" placeholder="Stop Number">
+                </div>
+                <div class="control">
+                    <button class="button is-link">Save</button>
+                </div>
+            </div>
+            <p class="help is-danger">{{ formError }}</p>
+        </form>
     </article>
 </div>

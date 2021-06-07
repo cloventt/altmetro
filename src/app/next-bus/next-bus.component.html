@@ -1,11 +1,11 @@
 <div class="tile is-parent">
     <article class="tile is-child notification">
         <button class="delete is-pulled-right" (click)="onDelete()"></button>
-        <p class="title">{{ name }}</p>
-        <p class="subtitle">{{ stopNumber }}</p>
+        <p class="title">{{ platformData.stopName }}</p>
+        <p class="subtitle">{{ platformData.stopNumber }}</p>
         <table class="table is-striped is-fullwidth">
             <tbody>
-                <tr *ngFor="let bus of buses; index as i; first as isFirst">
+                <tr *ngFor="let bus of nextBuses">
                     <th>{{ bus.routeNumber }}</th>
                     <td>{{ bus.routeName }}</td>
                     <td>{{ bus.etaMinutes }} mins</td>

@@ -1,5 +1,6 @@
-import { Component, Injectable, OnInit } from '@angular/core';
-import { MetroinfoApiService, PlatformData } from '../metroinfo-api.service';
+import { Component, Injectable, Input, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { MetroinfoApiService, PlatformData as PlatformConfig, RouteEta } from '../metroinfo-api.service';
 import { StoredConfigService } from '../stored-config.service';
 
 @Component({
@@ -10,18 +11,18 @@ import { StoredConfigService } from '../stored-config.service';
 @Injectable()
 export class NextBusComponent implements OnInit {
 
-  name: string;
+  @Input() platformData: PlatformConfig;
 
-  stopNumber = 3639;
+  nextBuses: RouteEta[];
 
-  buses = [];
+  dataObserverSubscription: Subscription;
 
   constructor(private metroinfoApi: MetroinfoApiService,
               private appConfigService: StoredConfigService) { }
 
   ngOnInit(): void {
-    this.metroinfoApi
-      .getNextBus(this.stopNumber)
+    this.dataObserverSubscription = this.metroinfoApi
+      .getNextBus(this.platformData.stopTag)
       .subscribe({
         next: this.handlePlatformUpdate.bind(this),
         error: this.handlePlatformUpdateError.bind(this),
@@ -30,13 +31,13 @@ export class NextBusComponent implements OnInit {
 
   onDelete(): void {
     const config = this.appConfigService.get();
-    config.savedStops.filter((stop) => stop.stopNumber !== this.stopNumber);
+    config.savedStops = config.savedStops.filter((stop) => stop.stopTag !== this.platformData.stopTag);
     this.appConfigService.update(config);
+    window.location.reload();
   }
 
-  private handlePlatformUpdate(data: PlatformData): void {
-    this.name = data.stopName;
-    this.buses = data.buses;
+  private handlePlatformUpdate(data: RouteEta[]): void {
+    this.nextBuses = data;
   }
 
   private handlePlatformUpdateError(e: Error): void {
