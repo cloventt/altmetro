@@ -37,7 +37,7 @@ export class NextBusComponent implements OnInit {
   }
 
   private handlePlatformUpdate(data: RouteEta[]): void {
-    this.nextBuses = data;
+    this.nextBuses = data.slice(0, 4);
   }
 
   private handlePlatformUpdateError(e: Error): void {
