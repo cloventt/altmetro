@@ -4,16 +4,16 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { NextBusComponent } from './next-bus/next-bus.component';
-import { AddBusTileComponent } from './add-bus-tile/add-bus-tile.component';
 import { PlatformViewComponent } from './platform-view/platform-view.component';
+import { NextBusComponent } from './platform-view/next-bus/next-bus.component';
+import { AddBusTileComponent } from './platform-view/add-bus-tile/add-bus-tile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NextBusComponent,
     AddBusTileComponent,
-    PlatformViewComponent
+    PlatformViewComponent,
   ],
   imports: [
     BrowserModule,

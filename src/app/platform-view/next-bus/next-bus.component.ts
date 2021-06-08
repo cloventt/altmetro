@@ -1,8 +1,7 @@
 import { Component, Injectable, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { delay, repeat } from 'rxjs/operators';
-import { MetroinfoApiService, PlatformData as PlatformConfig, RouteEta } from '../metroinfo-api.service';
-import { StoredConfigService } from '../stored-config.service';
+import { MetroinfoApiService, PlatformData as PlatformConfig, RouteEta } from '../../metroinfo-api.service';
+import { StoredConfigService } from '../../stored-config.service';
 
 @Component({
   selector: 'app-next-bus',

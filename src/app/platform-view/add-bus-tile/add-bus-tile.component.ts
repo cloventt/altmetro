@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MetroinfoApiService } from '../metroinfo-api.service';
-import { StoredConfigService } from '../stored-config.service';
+import { MetroinfoApiService } from '../../metroinfo-api.service';
+import { StoredConfigService } from '../../stored-config.service';
 
 @Component({
   selector: 'app-add-bus-tile',
