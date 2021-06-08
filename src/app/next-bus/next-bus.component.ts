@@ -1,5 +1,6 @@
-import { Component, Injectable, Input, OnInit } from '@angular/core';
+import { Component, Injectable, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { delay, repeat } from 'rxjs/operators';
 import { MetroinfoApiService, PlatformData as PlatformConfig, RouteEta } from '../metroinfo-api.service';
 import { StoredConfigService } from '../stored-config.service';
 
@@ -15,14 +16,22 @@ export class NextBusComponent implements OnInit {
 
   nextBuses: RouteEta[];
 
-  dataObserverSubscription: Subscription;
-
   constructor(private metroinfoApi: MetroinfoApiService,
-              private appConfigService: StoredConfigService) { }
+            private appConfigService: StoredConfigService) { }
 
   ngOnInit(): void {
-    this.dataObserverSubscription = this.metroinfoApi
+    this.metroinfoApi
       .getNextBus(this.platformData.stopTag)
+      .subscribe({
+        next: this.handlePlatformUpdate.bind(this),
+        error: this.handlePlatformUpdateError.bind(this),
+      });
+
+    // update every 10 seconds
+    this.metroinfoApi
+      .getNextBus(this.platformData.stopTag)
+      .pipe(delay(10000))
+      .pipe(repeat())
       .subscribe({
         next: this.handlePlatformUpdate.bind(this),
         error: this.handlePlatformUpdateError.bind(this),
