@@ -16,7 +16,7 @@ export class NextBusComponent implements OnInit {
   nextBuses: RouteEta[];
 
   constructor(private metroinfoApi: MetroinfoApiService,
-            private appConfigService: StoredConfigService) { }
+    private appConfigService: StoredConfigService) { }
 
   ngOnInit(): void {
     this.metroinfoApi
@@ -35,6 +35,15 @@ export class NextBusComponent implements OnInit {
         next: this.handlePlatformUpdate.bind(this),
         error: this.handlePlatformUpdateError.bind(this),
       });
+
+    window.onfocus = () => {
+      this.metroinfoApi
+        .getNextBus(this.platformData.stopTag)
+        .subscribe({
+          next: this.handlePlatformUpdate.bind(this),
+          error: this.handlePlatformUpdateError.bind(this),
+        });
+    };
   }
 
   onDelete(): void {
