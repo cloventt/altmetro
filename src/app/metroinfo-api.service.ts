@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import {decode} from 'html-entities';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as parser from 'fast-xml-parser';
@@ -66,8 +67,9 @@ export class MetroinfoApiService {
         const trip = Array.isArray(dest.Trip) ? dest.Trip : [dest.Trip];
         trip.forEach((t) => {
           const routeData = new RouteEta();
-          routeData.routeName = routeName;
-          routeData.routeNumber = routeNumber;
+          routeData.routeName = decode(routeName);
+          routeData.destinationName = decode(dest.Name);
+          routeData.routeNumber = decode(routeNumber);
           routeData.etaMinutes = t.ETA;
           routeData.tripNumber = t.TripNo;
           buses.push(routeData);
@@ -87,7 +89,8 @@ export class PlatformData {
 }
 
 export class RouteEta {
-  routeNumber: number;
+  destinationName: string;
+  routeNumber: string;
   tripNumber: number;
   routeName: string;
   etaMinutes: number;
