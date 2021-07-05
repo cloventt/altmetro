@@ -6,8 +6,8 @@
         <table class="table is-striped is-fullwidth">
             <tbody>
                 <tr *ngFor="let bus of nextBuses">
-                    <td [ngStyle]="{'min-width': (bus.express) ? '95px' : 'auto'}">
-                        <div class="tags has-addons">
+                    <td [ngStyle]="{'min-width': (bus.express) ? '115px' : 'auto'}" class="has-text-centered">
+                        <div class="tags are-medium has-addons">
                             <span class="tag is-bus{{ bus.routeNumber }} has-text-weight-bold"
                                 title="{{ bus.routeName }}">{{ bus.routeNumber }}</span>
                             <span class="tag is-danger has-text-weight-bold" title="Express"
