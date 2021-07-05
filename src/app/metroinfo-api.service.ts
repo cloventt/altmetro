@@ -94,4 +94,9 @@ export class RouteEta {
   tripNumber: number;
   routeName: string;
   etaMinutes: number;
+
+  get express(): boolean {
+    return this.destinationName.includes('Express');
+  }
+
 }

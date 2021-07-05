@@ -6,7 +6,14 @@
         <table class="table is-striped is-fullwidth">
             <tbody>
                 <tr *ngFor="let bus of nextBuses">
-                    <td><span class="tag is-bus{{ bus.routeNumber }}" data-tooltip="{{ bus.routeName }}">{{ bus.routeNumber }}</span></td>
+                    <td [ngStyle]="{'min-width': (bus.express) ? '95px' : 'auto'}">
+                        <div class="tags has-addons">
+                            <span class="tag is-bus{{ bus.routeNumber }} has-text-weight-bold"
+                                title="{{ bus.routeName }}">{{ bus.routeNumber }}</span>
+                            <span class="tag is-danger has-text-weight-bold" title="Express"
+                                *ngIf="bus.express">X</span>
+                        </div>
+                    </td>
                     <td>{{ bus.destinationName }}</td>
                     <td>{{ bus.etaMinutes }} mins</td>
                 </tr>
